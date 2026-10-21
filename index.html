@@ -1,13 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Charity Water Game</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Charity Water Game | Pipe Feed</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
-    <h1>Welcome to the Charity Water Game Prototype</h1>
-    <script src="script.js"></script>
+    <main class="game">
+        <header class="banner">
+            <p>Charity Water Game</p>
+            <h1>PIPE FEED</h1>
+        </header>
+        <section class="game-layout" aria-label="Pipe Feed game">
+            <aside class="info-panel">
+                <section class="hud" aria-label="Game status">
+                    <div class="tag" id="level">Level 1</div>
+                    <div class="tag" id="score">Score: 0</div>
+                    <div class="tag" id="timer" aria-live="off">01:00</div>
+                </section>
+                <p class="message" id="message" aria-live="polite">Rotate the pipes to guide the water to the drain.</p>
+            </aside>
+            <div class="board-wrap">
+                <div class="source" aria-hidden="true">
+                    <div class="terminal">
+                        <svg viewBox="0 0 100 100">
+                            <path class="body" d="M0 27H94V73H0Z"/>
+                            <ellipse class="rim-outer" cx="94" cy="50" rx="6" ry="23"/>
+                            <ellipse class="opening" cx="94" cy="50" rx="3" ry="15"/>
+                        </svg>
+                    </div>
+                </div>
+                <div id="board" class="board" role="group" aria-label="Pipe puzzle board"></div>
+                <div class="goal" aria-hidden="true">
+                    <div class="terminal">
+                        <svg viewBox="0 0 100 100">
+                            <path class="body" d="M27 0H73V100H27Z"/>
+                            <ellipse class="rim-outer" cx="50" cy="6" rx="23" ry="6"/>
+                            <ellipse class="opening" cx="50" cy="6" rx="15" ry="3"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <aside class="controls-panel">
+                <div class="controls" aria-label="Game controls">
+                    <button class="btn" id="restart" type="button">Restart</button>
+                    <button class="btn" id="pause" type="button" aria-pressed="false">Pause</button>
+                    <button class="btn" id="flow" type="button">Start Water</button>
+                </div>
+            </aside>
+        </section>
+    </main>
 </body>
 </html>
