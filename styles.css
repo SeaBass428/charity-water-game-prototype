@@ -1,15 +1,382 @@
-/* Charity: water Brand Colors
+:root {
+  --primary-blue: #2e9df7;
+  --primary-yellow: #ffc907;
+  --secondary-light-blue: #8bd1cb;
+  --ink: #101010;
+  --pipe: #969b9d;
+  --board: #f4c38f;
+  --water: #08aee7;
+  --board-width: min(88vw, 430px);
+}
 
-Primary Colors:
-- Yellow:     #FFC907
-- Blue:       #2E9DF7
+* {
+  box-sizing: border-box;
+}
 
-Secondary Colors:
-- Light Blue: #8BD1CB
-- Green:      #4FCB53
-- Orange:     #FF902A
-- Red:        #F5402C
-- Dark Green: #159A48
-- Pink:       #F16061
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+}
 
-*/
+body {
+  display: flex;
+  justify-content: center;
+  background: #fff;
+  color: var(--ink);
+  font-family: "Courier New", monospace;
+}
+
+.game {
+  width: min(100%, 1080px);
+  min-height: 100vh;
+  padding-bottom: 20px;
+}
+
+.banner {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  height: 82px;
+  border-bottom: 2px solid #aaa;
+  background: var(--primary-blue);
+  color: #fff;
+}
+
+.banner p {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.banner h1 {
+  margin: 0;
+  color: #fff;
+  font-family: Impact, "Arial Black", sans-serif;
+  font-size: clamp(38px, 8vw, 54px);
+  line-height: 1;
+}
+
+.game-layout {
+  display: grid;
+  grid-template-areas: "info board controls";
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(16px, 3vw, 32px);
+  padding: 28px 24px 36px;
+}
+
+.info-panel {
+  grid-area: info;
+}
+
+.controls-panel {
+  grid-area: controls;
+}
+
+.hud,
+.controls {
+  width: auto;
+  margin: 0;
+}
+
+.hud {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+}
+
+.tag {
+  padding: 6px 4px;
+  border: 2px solid var(--ink);
+  background: var(--secondary-light-blue);
+  box-shadow: 1px 1px 0 var(--ink);
+  font-size: clamp(13px, 3.6vw, 17px);
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.board-wrap {
+  position: relative;
+  grid-area: board;
+  width: var(--board-width);
+  margin: 0 auto;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  aspect-ratio: 8 / 9;
+  overflow: hidden;
+  border: 4px solid var(--ink);
+  background: var(--board);
+  touch-action: manipulation;
+}
+
+.cell {
+  position: relative;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-right: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cell:nth-child(8n) {
+  border-right: 0;
+}
+
+.cell:nth-last-child(-n + 8) {
+  border-bottom: 0;
+}
+
+.cell:focus-visible {
+  z-index: 1;
+  outline: 3px solid #fff;
+  outline-offset: -4px;
+}
+
+.pipe {
+  position: absolute;
+  inset: 8%;
+  transform: rotate(var(--r));
+  transition: transform 130ms ease;
+}
+
+.pipe svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.pipe path,
+.pipe line {
+  fill: none;
+  stroke: var(--pipe);
+  stroke-width: 16;
+  stroke-linecap: butt;
+  stroke-linejoin: round;
+}
+
+.pipe .edge {
+  stroke: var(--ink);
+  stroke-width: 21;
+}
+
+.pipe .waterEdge {
+  stroke: var(--ink);
+  stroke-width: 12;
+}
+
+.pipe .water {
+  stroke: var(--water);
+  stroke-width: 8;
+}
+
+.pipe .waterEdge,
+.pipe .water {
+  display: none;
+}
+
+.wet .pipe .waterEdge,
+.wet .pipe .water {
+  display: block;
+}
+
+.source,
+.goal {
+  position: absolute;
+  z-index: 2;
+  height: 14%;
+  pointer-events: none;
+}
+
+.source {
+  top: 0;
+  left: -12.5%;
+  width: 12.5%;
+  height: 11.111%;
+}
+
+.goal {
+  right: 0;
+  bottom: -11.111%;
+  width: 12.5%;
+  height: 11.111%;
+}
+
+.terminal {
+  position: absolute;
+  inset: 0;
+}
+
+.terminal svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.terminal .body {
+  fill: #969b9d;
+  stroke: #080808;
+  stroke-width: 4;
+}
+
+.terminal .rim-outer {
+  fill: #969b9d;
+  stroke: #080808;
+  stroke-width: 4;
+}
+
+.terminal .opening {
+  fill: #090909;
+  stroke: none;
+}
+
+.message {
+  margin: 16px 0 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn {
+  width: 100%;
+  padding: 7px 14px;
+  border: 2px solid var(--ink);
+  background: var(--primary-yellow);
+  box-shadow: 2px 2px 0 var(--ink);
+  cursor: pointer;
+  font: 700 16px "Courier New", monospace;
+}
+
+.btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--primary-blue);
+  outline-offset: 3px;
+}
+
+.flash {
+  animation: flash 250ms 2;
+}
+
+@keyframes flash {
+  50% {
+    background: #fff;
+  }
+}
+
+@media (max-width: 900px) {
+  .game-layout {
+    grid-template-areas:
+      "board board"
+      "info controls";
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 18px 12px;
+    padding: 20px 12px 28px;
+  }
+
+  .board-wrap {
+    width: var(--board-width);
+    margin-bottom: 6px;
+  }
+
+  .hud {
+    gap: 8px;
+  }
+
+  .message {
+    margin-top: 12px;
+    text-align: left;
+  }
+
+  .btn {
+    padding-right: 4px;
+    padding-left: 4px;
+    font-size: clamp(12px, 3.5vw, 16px);
+  }
+}
+
+@media (max-width: 600px) {
+  .game {
+    padding-bottom: 12px;
+  }
+
+  .banner {
+    height: 58px;
+  }
+
+  .banner p {
+    font-size: 10px;
+  }
+
+  .banner h1 {
+    font-size: clamp(30px, 9vw, 40px);
+  }
+
+  .game-layout {
+    grid-template-areas:
+      "board"
+      "info"
+      "controls";
+    grid-template-columns: minmax(0, 1fr);
+    gap: 9px;
+    padding: 9px 12px 14px;
+  }
+
+  .board-wrap {
+    width: min(90%, 430px, calc((100svh - 275px) * 0.8));
+    margin-left: 10%;
+    margin-bottom: calc((100svh - 275px) * 0.1);
+  }
+
+  .hud {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .tag {
+    padding: 7px 2px;
+    font-size: clamp(12px, 3.8vw, 16px);
+  }
+
+  .message {
+    max-width: 34em;
+    margin: 6px auto 0;
+    font-size: 13px;
+    text-align: center;
+  }
+
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .btn {
+    min-height: 38px;
+    padding: 6px 3px;
+    font-size: clamp(12px, 3.8vw, 15px);
+    line-height: 1.1;
+  }
+}
