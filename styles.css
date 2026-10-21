@@ -249,6 +249,28 @@ body {
   text-align: center;
 }
 
+.win-message {
+  margin-top: 16px;
+  padding: 12px;
+  border: 2px solid var(--ink);
+  background: var(--secondary-light-blue);
+  box-shadow: 2px 2px 0 var(--ink);
+  text-align: center;
+}
+
+.win-message h2,
+.win-message p {
+  margin: 0 0 8px;
+}
+
+.win-message h2 {
+  font-size: 20px;
+}
+
+.win-message .btn {
+  margin-top: 4px;
+}
+
 .controls {
   display: flex;
   flex-direction: column;

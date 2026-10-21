@@ -21,6 +21,12 @@
                     <div class="tag" id="timer" aria-live="off">01:00</div>
                 </section>
                 <p class="message" id="message" aria-live="polite">Rotate the pipes to guide the water to the drain.</p>
+                <section class="win-message" id="win-message" aria-live="polite" hidden>
+                    <h2>You win!</h2>
+                    <p id="round-score"></p>
+                    <p>Continue to the next level?</p>
+                    <button class="btn" id="continue" type="button">Continue</button>
+                </section>
             </aside>
             <div class="board-wrap">
                 <div class="source" aria-hidden="true">

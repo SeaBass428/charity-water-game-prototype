@@ -13,10 +13,13 @@ const opposite = { [N]: S, [E]: W, [S]: N, [W]: E };
 const templates = { straight: [W, E], corner: [N, E] };
 const boardEl = document.querySelector('#board');
 const messageEl = document.querySelector('#message');
+const winMessageEl = document.querySelector('#win-message');
+const roundScoreEl = document.querySelector('#round-score');
 const scoreEl = document.querySelector('#score');
 const timerEl = document.querySelector('#timer');
 const levelEl = document.querySelector('#level');
 const pauseEl = document.querySelector('#pause');
+const continueEl = document.querySelector('#continue');
 
 let grid = [];
 let score = 0;
@@ -24,7 +27,6 @@ let level = 1;
 let seconds = 60;
 let ticking = null;
 let flowTimeout = null;
-let levelTimeout = null;
 let flowing = false;
 let paused = false;
 let pausedMessage = '';
@@ -130,12 +132,6 @@ function typeAndRotationFor(directions) {
   return ['corner', 0];
 }
 
-function clearPendingActions() {
-  clearFlowTimeout();
-  clearTimeout(levelTimeout);
-  levelTimeout = null;
-}
-
 function clearFlowTimeout() {
   clearTimeout(flowTimeout);
   flowTimeout = null;
@@ -170,7 +166,9 @@ function startTimer() {
 
 function newGame() {
   clearInterval(ticking);
-  clearPendingActions();
+  clearFlowTimeout();
+  messageEl.hidden = false;
+  winMessageEl.hidden = true;
   paused = false;
   pauseEl.textContent = 'Pause';
   pauseEl.setAttribute('aria-pressed', 'false');
@@ -314,16 +312,14 @@ function win() {
   const gain = 100 + seconds * 5;
   score += gain;
   scoreEl.textContent = `Score: ${score}`;
-  messageEl.textContent = `Goal reached! +${gain} points.`;
-  levelTimeout = setTimeout(() => {
-    level++;
-    levelEl.textContent = `Level ${level}`;
-    newGame();
-  }, 1100);
+  messageEl.hidden = true;
+  roundScoreEl.textContent = `+${gain} points`;
+  winMessageEl.hidden = false;
+  continueEl.focus();
 }
 
 function togglePause() {
-  if (seconds <= 0 || levelTimeout) return;
+  if (seconds <= 0) return;
 
   paused = !paused;
   pauseEl.textContent = paused ? 'Resume' : 'Pause';
@@ -349,5 +345,10 @@ function togglePause() {
 
 document.querySelector('#restart').addEventListener('click', newGame);
 document.querySelector('#flow').addEventListener('click', startFlow);
+continueEl.addEventListener('click', () => {
+  level++;
+  levelEl.textContent = `Level ${level}`;
+  newGame();
+});
 pauseEl.addEventListener('click', togglePause);
 newGame();
