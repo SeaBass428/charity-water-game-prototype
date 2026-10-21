@@ -14,6 +14,7 @@ const templates = { straight: [W, E], corner: [N, E] };
 const boardEl = document.querySelector('#board');
 const messageEl = document.querySelector('#message');
 const winMessageEl = document.querySelector('#win-message');
+const celebrationEl = document.querySelector('#celebration');
 const roundScoreEl = document.querySelector('#round-score');
 const scoreEl = document.querySelector('#score');
 const timerEl = document.querySelector('#timer');
@@ -159,7 +160,7 @@ function startTimer() {
       clearFlowTimeout();
       flowing = false;
       pauseEl.disabled = true;
-      messageEl.textContent = 'Time’s up. Rotate and restart to try again.';
+      messageEl.textContent = 'Time’s up. Restart to try again.';
     }
   }, 1000);
 }
@@ -167,6 +168,7 @@ function startTimer() {
 function newGame() {
   clearInterval(ticking);
   clearFlowTimeout();
+  celebrationEl.replaceChildren();
   messageEl.hidden = false;
   winMessageEl.hidden = true;
   paused = false;
@@ -198,7 +200,7 @@ function newGame() {
   }
 
   render();
-  messageEl.textContent = 'Tap pipes to rotate them. Connect blue water to the drain.';
+  messageEl.textContent = 'Tap the pipes to rotate them. Connect then start the water.';
   timerEl.textContent = formatTime(seconds);
   startTimer();
 }
@@ -315,7 +317,25 @@ function win() {
   messageEl.hidden = true;
   roundScoreEl.textContent = `+${gain} points`;
   winMessageEl.hidden = false;
+  celebrate();
   continueEl.focus();
+}
+
+function celebrate() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const colors = ['#2e9df7', '#ffc907', '#8bd1cb', '#f4c38f'];
+
+  for (let index = 0; index < 36; index++) {
+    const piece = document.createElement('span');
+    piece.className = 'confetti-piece';
+    piece.style.left = `${Math.random() * 100}%`;
+    piece.style.backgroundColor = colors[index % colors.length];
+    piece.style.animationDelay = `${Math.random() * 0.8}s`;
+    piece.style.animationDuration = `${2.4 + Math.random() * 1.2}s`;
+    piece.addEventListener('animationend', () => piece.remove());
+    celebrationEl.append(piece);
+  }
 }
 
 function togglePause() {

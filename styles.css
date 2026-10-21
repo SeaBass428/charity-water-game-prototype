@@ -34,9 +34,10 @@ body {
 }
 
 .banner {
-  display: grid;
-  align-content: center;
-  justify-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 2vw, 16px);
   height: 82px;
   border-bottom: 2px solid #aaa;
   background: var(--primary-blue);
@@ -45,17 +46,28 @@ body {
 
 .banner p {
   margin: 0;
-  font-size: 12px;
+  font-size: clamp(27px, 6.4vw, 42px);
   font-weight: 700;
   line-height: 1;
 }
 
 .banner h1 {
+  display: flex;
+  align-items: center;
+  gap: 0.12em;
   margin: 0;
   color: #fff;
-  font-family: Impact, "Arial Black", sans-serif;
-  font-size: clamp(38px, 8vw, 54px);
+  font-family: "Courier New", monospace;
+  font-size: clamp(27px, 6.4vw, 42px);
+  font-weight: 700;
   line-height: 1;
+}
+
+.title-icon {
+  width: 1em;
+  height: 1em;
+  flex: 0 0 1em;
+  object-fit: contain;
 }
 
 .game-layout {
@@ -271,6 +283,35 @@ body {
   margin-top: 4px;
 }
 
+.celebration {
+  position: fixed;
+  z-index: 10;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -16px;
+  width: 9px;
+  height: 14px;
+  animation: confetti-fall 3s ease-in forwards;
+}
+
+@keyframes confetti-fall {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(110vh) rotate(720deg);
+  }
+}
+
 .controls {
   display: flex;
   flex-direction: column;
@@ -346,14 +387,6 @@ body {
 
   .banner {
     height: 58px;
-  }
-
-  .banner p {
-    font-size: 10px;
-  }
-
-  .banner h1 {
-    font-size: clamp(30px, 9vw, 40px);
   }
 
   .game-layout {
